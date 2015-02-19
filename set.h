@@ -14,7 +14,8 @@ ErrCode set_create (Set *, int (*compar)(const Data, const Data));      // Compa
 
 ErrCode set_put (Set, Data);
 
-ErrCode set_has (Set, Data);
+ErrCode set_has (Set, Data);            // Return OK                    If putted successfully
+                                        //        WRONG_ARGUMENTS       If there is no such item
 
 ErrCode set_remove (Set, Data);         // Returns OK                   If removed successfully
                                         //         WRONG_ARGUMENTS      If there is no such item
