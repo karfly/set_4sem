@@ -1,5 +1,6 @@
 #include "../set.h"
 #include <stdlib.h>
+#include <stdio.h>
 typedef struct node
 {
     struct node* next;
@@ -128,5 +129,17 @@ ErrCode set_delete (Set set)
 {
     Array* arr = (Array*) set;
     Array_destroy(arr);
+    return OK;
+}
+ErrCode set_dump(Set set)
+{
+    Array* arr = (Array*) set;
+    node* n = arr->head;
+    while (n)
+    {
+        printf("%d\t",n->value);
+        n = n->next;
+    }
+    printf("\n");
     return OK;
 }
