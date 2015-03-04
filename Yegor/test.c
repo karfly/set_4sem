@@ -3,7 +3,7 @@
 
 int main()
 {
-    printf("\tIf set has a member we will print 0\n");
+    //printf("\tIf set has a member we will print 0\n");
     Set s;
     set_create(&s);
     set_put(s,123);
@@ -24,6 +24,8 @@ int main()
     set_remove(s,256256);
     //set_dump(s);
     printf("set has 2456256:%s\n",(set_has(s,256256)==OK)?"true":"false");
+    set_remove(s,567);
+    printf("set has 567:%s\n",(set_has(s,567)==OK)?"true":"false");
     set_delete(s);
     getch();
 }

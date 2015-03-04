@@ -32,20 +32,13 @@ void Array_insert(Array* arr, Data value)
 {
     node* n = malloc (sizeof(node));
     n->value = value;
-    n->next = NULL;
-    if (arr->head == NULL)
+    n->next = arr->head;
+    n->prev = NULL;
+    if (arr->head)
     {
-        arr->head = n;
-        n->prev = NULL;
-        return;
+        arr->head->prev = n;
     }
-    node * buf = arr->head;
-    while (buf->next)
-    {
-        buf = buf->next;
-    }
-    buf->next = n;
-    n->prev = buf;
+    arr->head = n;
     return;
 }
 void Array_remove_item(Array* arr, Data value)
@@ -55,7 +48,6 @@ void Array_remove_item(Array* arr, Data value)
         return;
     }
     node* nn = arr->head;
-
     do
     {
         node* next = nn->next;
@@ -78,7 +70,7 @@ void Array_remove_item(Array* arr, Data value)
         }
         nn = next;
     }
-    while (nn->next != NULL);
+    while (nn!= NULL);
 }
 int Array_has_item(Array* arr,Data value)
 {
