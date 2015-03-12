@@ -19,6 +19,8 @@ Array* Array_init()
 }
 void Array_destroy(Array* arr)
 {
+    if (arr == NULL)
+        return;
     node * nn = arr->head;
     while (nn)
     {
@@ -30,6 +32,8 @@ void Array_destroy(Array* arr)
 }
 void Array_insert(Array* arr, Data value)
 {
+    if (arr == NULL)
+        return;
     node* n = malloc (sizeof(node));
     n->value = value;
     n->next = arr->head;
@@ -43,6 +47,8 @@ void Array_insert(Array* arr, Data value)
 }
 void Array_remove_item(Array* arr, Data value)
 {
+    if (arr == NULL)
+        return;
     if (arr->head == NULL)
     {
         return;
@@ -87,6 +93,8 @@ int Array_has_item(Array* arr,Data value)
 }
 ErrCode set_create (Set * set)
 {
+    if (set == NULL)
+        return WRONG_ARGUMENTS;
     *set = (Set*) Array_init();
     if (set == NULL)
         return OUT_OF_RESOURSES;
@@ -95,6 +103,8 @@ ErrCode set_create (Set * set)
 ErrCode set_put (Set s, Data value)
 {
     Array* arr = (Array*) s;
+    if (arr == NULL)
+        return WRONG_ARGUMENTS;
     if (Array_has_item(arr,value))
     {
         return OK;
@@ -105,6 +115,8 @@ ErrCode set_put (Set s, Data value)
 ErrCode set_has (Set set, Data value)
 {
     Array* arr = (Array*) set;
+    if (arr == NULL)
+        return WRONG_ARGUMENTS;
     if (Array_has_item(arr,value))
     {
         return OK;
@@ -114,18 +126,24 @@ ErrCode set_has (Set set, Data value)
 ErrCode set_remove (Set set, Data value)
 {
     Array* arr = (Array*) set;
+    if (arr == NULL)
+        return WRONG_ARGUMENTS;
     Array_remove_item(arr,value);
     return OK;
 }
 ErrCode set_delete (Set set)
 {
     Array* arr = (Array*) set;
+    if (arr == NULL)
+        return WRONG_ARGUMENTS;
     Array_destroy(arr);
     return OK;
 }
 ErrCode set_dump(Set set)
 {
     Array* arr = (Array*) set;
+    if (arr == NULL)
+        return WRONG_ARGUMENTS;
     node* n = arr->head;
     while (n)
     {
