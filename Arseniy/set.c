@@ -40,8 +40,13 @@ int remove_el_from_List(Node *head, void* value){
     Node *prev = head;
     if( head->next){
         if( head->value == (int*) value){
-            free(head);
-            head = tmp;
+            while(tmp->next){
+                prev->value = tmp->value;
+                prev = prev->next;
+                tmp = tmp->next;
+            }
+            free(tmp);
+            prev->next = NULL;
             return 1;
         }
     }
