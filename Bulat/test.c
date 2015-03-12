@@ -1,6 +1,6 @@
 #include <stdio.h>
-
-void error (char* reason)
+#include "set.h"
+int error (char* reason)
 {
 	printf ("Failed to %s\n", reason);
 	return -1;
@@ -23,47 +23,47 @@ int main()
 	Set set = NULL;
 
         if ( set_create (&set, &compare_int) ) {
-                error ("set_create");
+                return error ("set_create");
         }
 
         if ( set_put (set, &n1) ) {
-                error("set_put");
+                return error("set_put");
         }
 
         if ( set_put (set, &n2) ) {
-                error ("set_put");
+                return error ("set_put");
         }
 
         if ( set_put (set, &n3) ) {
-                error("set_put");
+                return error("set_put");
         }
 
         if ( set_remove (set, &n1) ) {
-                error ("set_remove");
+                return error ("set_remove");
         }
 
         if ( !set_has(set, &n1) ) {
-                error ("set_has");
+                return error ("set_has");
         }
 
         if ( set_put (set, &n2) ) {
-                error("set_put");
+                return error("set_put");
         }
 
         if ( set_has (set, &n1) ) {
-               error ("set_has");
+               return error ("set_has");
         }
 
 
         if ( set_delete (&set) ) {
-                error ("set_delete");
+                return error ("set_delete");
         }
 
-	if ( set_dump (set, &printer_int)){
-		error ("set_dump");
+	/*if ( set_dump (set, printer_int)){
+		return error ("set_dump");
 	}
 
-        printf ("OK\n");
+        printf ("OK\n");*/
 
         return 0;
 }

@@ -1,35 +1,42 @@
 #include "set.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
+#include <string.h>
 
-typedef struct set_h set_h;
-typedef struct list list;
+typedef struct set_h    set_h;
+typedef struct list     list;
 
-set_h {
-    list* head;
-    int (*compare_f) (const Data, const Data);
-};
 
-list {
+
+struct list {
     list* next;
     Data data;
+};
+
+struct set_h {
+    list* head;
+    int (*compare_f) (const Data, const Data);
 };
 
 ErrCode set_create (Set * set_ptr, int (*compar)(const Data, const Data))
 {
 
-    if ( (!set_ptr) || (!compar)
+    if ( (!set_ptr) || (!compar) ){
         return WRONG_ARGUMENTS;
+    }
 
-    set_h * set_new = (struct setik*) calloc (1, sizeof(struct setik));
+    set_h * set_new = (set_h*) calloc (1, sizeof(set_h));
 
     if (!set_new)
         return OUT_OF_RESOURSES;
 
     set_new->head = NULL;
-    set_new->compare_func = compar;
+    set_new->compare_f = compar;
 
     *set_ptr = set_new;
+
+    return OK;
 
 };
 
@@ -48,10 +55,15 @@ ErrCode set_put (Set set_ls, Data data)
         list* ls = (list*) calloc (1, sizeof(list));
 
         if (!ls)
-            return OUT_OF_RESOURCES;
+            return OUT_OF_RESOURSES;
 
         ls->next = NULL;
-        ls->data = data;
+
+	ls->data = (int*) calloc (1, sizeof(int));
+
+        memcpy (ls->data, data, sizeof(int));
+
+	set->head = ls;
 
         return OK;
 
@@ -60,28 +72,31 @@ ErrCode set_put (Set set_ls, Data data)
     {
 
         list* ptr = set->head;
+	list* temp;
 
         while (!ptr)
         {
 
-            res = set->compare_f (ptr->data, data);
-
-            if (!res)
-                return OK;
-            else
-            {
-                ptr = ptr->next;
-            }
+            if (!(*set->compare_f) (ptr->data, data))
+                return OK;	    
+		
+	    temp = ptr;
+	    ptr = ptr->next;
 
         }
 
-        ptr = (list*) calloc (1, sizeof(list));
+        list* list_new = (list*) calloc (1, sizeof(list));
 
-        ptr->next = NULL;
-        ptr->data = data;
-
-        if (!ptr)
+	if (!list_new)
             return OUT_OF_RESOURSES;
+
+        list_new->next = NULL;
+	
+	list_new->data = (int*) calloc (1, sizeof(int));	
+	
+        memcpy (list_new->data, data, sizeof(int));
+	
+	temp->next = list_new;
 
         return OK;
 
@@ -99,7 +114,7 @@ ErrCode set_has (Set set_ls, Data data)
 
     if (set->head == NULL){
 
-        return WRONG_ARGUMETS;
+        return WRONG_ARGUMENTS;
 
     }
     else
@@ -110,12 +125,10 @@ ErrCode set_has (Set set_ls, Data data)
         while (!ptr)
         {
 
-            res = set->compare_f (ptr->data, data);
-
-            if (!res)
+            if (!(*set->compare_f) (ptr->data, data))
                 return OK;
-            else
-                ptr = ptr->next;
+
+            ptr = ptr->next;
 
         }
 
@@ -126,7 +139,7 @@ ErrCode set_has (Set set_ls, Data data)
 };
 
 
-ErrCode set_remove (Set, Data)
+ErrCode set_remove (Set set_ls, Data data)
 {
 
     if ( (!set_ls) || (!data) )
@@ -136,32 +149,33 @@ ErrCode set_remove (Set, Data)
 
     if (set->head == NULL){
 
-        return WRONG_ARGUMETS;
+        return WRONG_ARGUMENTS;
 
     }
     else
     {
 
         list* ptr = set->head;
-        list* bptr = set;
-        list* temp;
+        list* bptr = ptr;
 
         while (!ptr)
         {
 
-            res = compare_f (ptr->data, data);
-            if (!res)
+            if (!(*set->compare_f) (ptr->data, data))
             {
-                temp = ptr;
+		if (ptr == bptr)
+		{
+			set->head = ptr->next;
+			free (ptr);
+			return OK;
+		}
                 bptr->next = ptr->next;
-                free (temp);
+                free (ptr);
                 return OK;
             }
-            else
-            {
+
                 bptr = ptr;
                 ptr = ptr->next;
-            }
 
         }
 
@@ -171,7 +185,7 @@ ErrCode set_remove (Set, Data)
 };
 
 
-ErrCode set_delete (Set set_ls)
+ErrCode set_delete (Set * set_ls)
 {
 
     if (!set_ls)
@@ -179,20 +193,23 @@ ErrCode set_delete (Set set_ls)
 
     set_h* set = (set_h*) set_ls;
     list* ptr = set->head;
-    list* bptr = set;
+    list* bptr;
 
     if (!ptr)
     {
         free (set);
+        set_ls = NULL;
         return OK;
     }
 
     while (!ptr)
     {
-        free(bprt);
+        free(bptr);
         bptr = ptr;
         ptr = ptr->next;
     }
+
+    set_ls = NULL;
 
     return OK;
 
@@ -215,5 +232,7 @@ ErrCode set_dump (Set set_ls, void (*printer) (const Data))
         printer (ptr->data);
         ptr = ptr->next;
     }
+	
+    return OK;
 
 };
