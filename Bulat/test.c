@@ -3,6 +3,7 @@
 void error (char* reason)
 {
 	printf ("Failed to %s\n", reason);
+	return -1;
 };
 
 int compare_int (const Data d1, const Data d2) {
