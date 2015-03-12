@@ -1,5 +1,5 @@
 typedef void * Set;
-typedef void * Data;
+typedef int Data;
 
 typedef enum {
 
@@ -9,7 +9,7 @@ typedef enum {
         OUT_OF_RESOURSES =  2,
 } ErrCode;
 
-ErrCode set_create (Set *, int (*compar)(const Data, const Data));      // Comparing func returns zero if items are equal
+ErrCode set_create (Set *);      // Comparing func returns zero if items are equal
                                                                         // and not not zero if not equal
 
 ErrCode set_put (Set, Data);
