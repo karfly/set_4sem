@@ -9,3 +9,5 @@ set Compiler= "mingw32-gcc.exe"
 cls
 %Compiler% %f1% %f2% -o %fout%
 pause
+cls
+%fout%

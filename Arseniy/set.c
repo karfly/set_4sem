@@ -8,39 +8,25 @@ typedef struct Node {
 } Node;
 
 Node* create_List() {
-    Node *head = NULL;
-    head = (Node*) malloc(sizeof(Node));
+    Node* head = (Node*) malloc(sizeof(Node));
     head->next = NULL;
     return head;
 }
 
 void put_el_to_List(Node *head, void* value) {
-    Node *ins;
-    Node *tmp = head;
-    while(tmp->next)
-        if(tmp->value <= (int*)value){
-            if( tmp->value == (int*) value){
-                goto end;
-            }
-            tmp = tmp->next;
-        }
-        else{
-            ins = (Node*) malloc(sizeof(Node));
-            ins->value = (int*) value;
-            ins->next = tmp->next;
-            tmp->next = ins;
-            goto end;
-        }
-    ins = (Node*) malloc(sizeof(Node));
-    ins->value = (int*) value;
-    tmp->next = ins;
+    Node* tmp = head;
+    while(tmp->next){
+        tmp = tmp->next;
+    }
+    Node* ins = (Node*) malloc(sizeof(Node*));
     ins->next = NULL;
-    end: ;
+    tmp->value = (int*) value;
+    tmp->next = ins;
 }
 
 int has_el_from_List(Node *head, void* value){
     Node *tmp = head;
-    while( tmp->next){
+    while( tmp->next ){
         if( tmp->value == (int*) value){
             return 1;
         }
@@ -52,22 +38,27 @@ int has_el_from_List(Node *head, void* value){
 int remove_el_from_List(Node *head, void* value){
     Node *tmp = head->next;
     Node *prev = head;
-    if( tmp )
-        while( tmp->next){
-            if( tmp->value == (int*) value){
-                free(tmp);
-                prev->next = tmp->next;
-                return 1;
+    if( head->next){
+        if( head->value == (int*) value){
+            while(tmp->next){
+                prev->value = tmp->value;
+                prev = prev->next;
+                tmp = tmp->next;
             }
-            tmp = tmp->next;
-        }
-    if( prev )
-        if( prev->value == (int*) value){
-            free(prev);
-            head = NULL;
-            head->next = NULL;
+            free(tmp);
+            prev->next = NULL;
             return 1;
         }
+    }
+    while(tmp->next){
+        if( tmp->value == (int*) value){
+            prev->next = tmp->next;
+            free(tmp);
+            return 1;
+        }
+        tmp = tmp->next;
+        prev = prev->next;
+    }
     return 0;
 }
 
@@ -130,13 +121,11 @@ ErrCode set_delete (Set * s)
 ErrCode set_dump(Set s)
 {
     Node* tmp = (Node*) s;
-    while (tmp)
+    while (tmp->next)
     {
-
         printf("%d ",tmp->value);
         tmp = tmp->next;
     }
     printf("\n");
     return OK;
 }
-
