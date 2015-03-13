@@ -180,7 +180,7 @@ ErrCode set_remove (Set set_ls, Data data)
 };
 
 
-ErrCode set_delete (Set * set_ls)
+ErrCode set_delete (Set set_ls)
 {
 
     if (!set_ls)

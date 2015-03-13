@@ -75,7 +75,7 @@ int main()
 		return error ("set_dump");
 	}
 
-        if ( set_delete (&set) ) {
+        if ( set_delete set ) {
                 return error ("set_delete");
         }
 
