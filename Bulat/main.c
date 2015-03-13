@@ -50,7 +50,7 @@ ErrCode set_put (Set set_ls, Data data)
 
     set_h* set = (set_h*) set_ls;
 
-    if (set->head == NULL){
+    if ((set->head) == NULL){
 
         list* ls = (list*) calloc (1, sizeof(list));
 
@@ -59,48 +59,42 @@ ErrCode set_put (Set set_ls, Data data)
 
         ls->next = NULL;
 
-	ls->data = (int*) calloc (1, sizeof(int));
+        ls->data = data;
 
-        memcpy (ls->data, data, sizeof(int));
-
-	set->head = ls;
+        set->head = ls;
 
         return OK;
 
     }
-    else
+
+    list* ptr = set->head;
+    list* temp;
+
+    while (ptr != NULL)
     {
 
-        list* ptr = set->head;
-	list* temp;
+        if (!(*set->compare_f) (ptr->data, data)){
+            return OK;
+        }
 
-        while (!ptr)
-        {
-
-            if (!(*set->compare_f) (ptr->data, data))
-                return OK;	    
-		
 	    temp = ptr;
 	    ptr = ptr->next;
 
-        }
-
-        list* list_new = (list*) calloc (1, sizeof(list));
-
-	if (!list_new)
-            return OUT_OF_RESOURSES;
-
-        list_new->next = NULL;
-	
-	list_new->data = (int*) calloc (1, sizeof(int));	
-	
-        memcpy (list_new->data, data, sizeof(int));
-	
-	temp->next = list_new;
-
-        return OK;
-
     }
+
+    list* list_new = (list*) calloc (1, sizeof(list));
+
+    if (!list_new)
+        return OUT_OF_RESOURSES;
+
+    list_new->next = NULL;
+
+    list_new->data = data;
+
+    temp->next = list_new;
+
+    return OK;
+
 };
 
 
@@ -122,7 +116,7 @@ ErrCode set_has (Set set_ls, Data data)
 
         list* ptr = set->head;
 
-        while (!ptr)
+        while (ptr)
         {
 
             if (!(*set->compare_f) (ptr->data, data))
@@ -131,6 +125,7 @@ ErrCode set_has (Set set_ls, Data data)
             ptr = ptr->next;
 
         }
+
 
         return WRONG_ARGUMENTS;
 
@@ -158,7 +153,7 @@ ErrCode set_remove (Set set_ls, Data data)
         list* ptr = set->head;
         list* bptr = ptr;
 
-        while (!ptr)
+        while (ptr)
         {
 
             if (!(*set->compare_f) (ptr->data, data))
@@ -202,7 +197,7 @@ ErrCode set_delete (Set * set_ls)
         return OK;
     }
 
-    while (!ptr)
+    while (ptr)
     {
         free(bptr);
         bptr = ptr;
@@ -227,12 +222,12 @@ ErrCode set_dump (Set set_ls, void (*printer) (const Data))
     if (!ptr)
         return WRONG_ARGUMENTS;
 
-    while(!ptr)
+    while(ptr)
     {
         printer (ptr->data);
         ptr = ptr->next;
     }
-	
+
     return OK;
 
 };
