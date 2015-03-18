@@ -9,6 +9,18 @@ typedef struct list     list;
 
 
 
+int compare_f (const Data d1, const Data d2)
+{
+	int res = 0;
+	if ( d1 == d2)
+		res  = 0;
+	else
+		res = 1;
+        return res;
+};
+
+
+
 struct list {
     list* next;
     Data data;
@@ -16,13 +28,12 @@ struct list {
 
 struct set_h {
     list* head;
-    int (*compare_f) (const Data, const Data);
 };
 
-ErrCode set_create (Set * set_ptr, int (*compar)(const Data, const Data))
+ErrCode set_create (Set * set_ptr)
 {
 
-    if ( (!set_ptr) || (!compar) ){
+    if ( (!set_ptr) ){
         return WRONG_ARGUMENTS;
     }
 
@@ -32,7 +43,6 @@ ErrCode set_create (Set * set_ptr, int (*compar)(const Data, const Data))
         return OUT_OF_RESOURSES;
 
     set_new->head = NULL;
-    set_new->compare_f = compar;
 
     *set_ptr = set_new;
 
@@ -73,7 +83,7 @@ ErrCode set_put (Set set_ls, Data data)
     while (ptr != NULL)
     {
 
-        if (!(*set->compare_f) (ptr->data, data)){
+        if (!(compare_f) (ptr->data, data)){
             return OK;
         }
 
@@ -119,7 +129,7 @@ ErrCode set_has (Set set_ls, Data data)
         while (ptr)
         {
 
-            if (!(*set->compare_f) (ptr->data, data))
+            if (!(compare_f) (ptr->data, data))
                 return OK;
 
             ptr = ptr->next;
@@ -156,7 +166,7 @@ ErrCode set_remove (Set set_ls, Data data)
         while (ptr)
         {
 
-            if (!(*set->compare_f) (ptr->data, data))
+            if (!(compare_f) (ptr->data, data))
             {
 		if (ptr == bptr)
 		{
@@ -211,7 +221,7 @@ ErrCode set_delete (Set set_ls)
 };
 
 
-ErrCode set_dump (Set set_ls, void (*printer) (const Data))
+/*ErrCode set_dump (Set set_ls)
 {
     if ( (!set_ls) || (!printer) )
         return WRONG_ARGUMENTS;
@@ -224,10 +234,10 @@ ErrCode set_dump (Set set_ls, void (*printer) (const Data))
 
     while(ptr)
     {
-        printer (ptr->data);
+        printf ("%d\n", data);
         ptr = ptr->next;
     }
 
     return OK;
 
-};
+};*/
