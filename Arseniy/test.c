@@ -25,4 +25,5 @@ int main(){
     printf("Set has 94034851: %s\n ",( set_has(s,94034851) == OK)?"True":"False");
     printf("Set has 0: %s\n ",( set_has(s,0) == OK)?"True":"False");
     set_delete(s);
+    printf("OK\n");
 }
